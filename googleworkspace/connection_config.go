@@ -9,6 +9,7 @@ type googleworkspaceConfig struct {
 	Credentials           *string `hcl:"credentials"`
 	ImpersonatedUserEmail *string `hcl:"impersonated_user_email"`
 	TokenPath             *string `hcl:"token_path"`
+	Scopes                []string `hcl:"scopes"`
 }
 
 func ConfigInstance() interface{} {

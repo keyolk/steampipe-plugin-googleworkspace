@@ -196,16 +196,24 @@ func getTokenSource(ctx context.Context, d *plugin.QueryData) (oauth2.TokenSourc
 		return nil, errors.New("impersonated_user_email must be configured")
 	}
 
+	scopes := googleworkspaceConfig.Scopes
+
 	// Authorize the request
+	if len(scopes) == 0 {
+		scopes = []string{
+			calendar.CalendarReadonlyScope,
+			drive.DriveReadonlyScope,
+			gmail.GmailReadonlyScope,
+			people.ContactsOtherReadonlyScope,
+			people.ContactsReadonlyScope,
+			people.DirectoryReadonlyScope,
+		}
+	}
 	config, err := google.JWTConfigFromJSON(
 		[]byte(credentialContent),
-		calendar.CalendarReadonlyScope,
-		drive.DriveReadonlyScope,
-		gmail.GmailReadonlyScope,
-		people.ContactsOtherReadonlyScope,
-		people.ContactsReadonlyScope,
-		people.DirectoryReadonlyScope,
+		scopes...,
 	)
+
 	if err != nil {
 		return nil, err
 	}
